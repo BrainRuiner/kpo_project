@@ -3,6 +3,7 @@ import { AppController } from "./search_controller.js";
 import { DatabaseController } from "./db/db_controller.js";
 import { Pool } from "pg";
 import { DB_CONFIG } from "./db/db_config.js";
+import { APP_CONFIG } from "./app_config.js";
 import { LoginManager } from "./login_manager.js";
 import { assert } from "./assert.js";
 
@@ -11,7 +12,7 @@ const dbController = new DatabaseController(pool);
 const appController = new AppController(dbController);
 const loginManager = new LoginManager(dbController);
 
-const PORT = 8080;
+const PORT = APP_CONFIG.PORT;
 const app = express();
 
 app.use(express.json());
@@ -35,45 +36,6 @@ const try_catch_next_wrapper = async (body, req, res, next) => {
     next(err);
   }
 };
-
-app.post("/search", async (req, res, next) => {
-  const addPresent = (apiResponse, dbResponse) => {
-    if (!(dbResponse && apiResponse)) {
-      throw Error("Bad api response or db response");
-    }
-    const keysFromDb = new Set(dbResponse.map((obj) => obj.key));
-
-    apiResponse.forEach((obj) => {
-      if (keysFromDb.has(obj.key)) {
-        obj.present = true;
-      }
-    });
-
-    // return ;
-  };
-
-  const body = async (req, res) => {
-    const { api, query, userid, password } = req.body;
-    assert(api && query !== undefined, "Wrong api in request on search/");
-
-    let queryString = "";
-    if (query) {
-      queryString = "?q=" + query.trim().replaceAll(" ", "+");
-    }
-    let response = await appController.getNewBooks(api + queryString, {});
-    let dbResponse = [];
-    if (userid && password) {
-      dbResponse = await appController.getSavedBooks(userid, password);
-    }
-
-    console.log(dbResponse);
-    addPresent(response.docs, dbResponse);
-
-    res.json({ api_response: response, success: response ? true : false });
-  };
-
-  await try_catch_next_wrapper(body, req, res, next);
-});
 
 app.post("/login", async (req, res, next) => {
   const body = async (req, res) => {
@@ -118,7 +80,7 @@ app.post("/deleteuser", async (req, res, next) => {
 
     let succ = await loginManager.deleteUser(userid, username, password);
     res.json({
-      success: succ ? true : false,
+      success: succ,
     });
   };
   await try_catch_next_wrapper(body, req, res, next);
@@ -176,10 +138,13 @@ app.post("/lib/removebook", async (req, res, next) => {
 
 app.post("/lib", async (req, res, next) => {
   const body = async (req, res) => {
-    const { userid, password } = req.body;
-    assert(userid && password, "Wrong auth token in request on /lib");
+    const { userid, password, query } = req.body;
+    assert(
+      userid && password && query !== undefined,
+      "Wrong auth token in request on /lib",
+    );
 
-    let response = await appController.getSavedBooks(userid, password);
+    let response = await appController.getSavedBooks(userid, password, query);
     res.json({ books: response, success: response ? true : false });
   };
   await try_catch_next_wrapper(body, req, res, next);
