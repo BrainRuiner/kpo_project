@@ -19,7 +19,8 @@ run_server() {
   KPO_POSTGRES_USER="${user}" \
   KPO_POSTGRES_HOST="${host}" \
   KPO_POSTGRES_PASSWORD="${password}" \
-  KPO_POSTGRES_PORT="${port}" bash ./run.sh
+  KPO_POSTGRES_PORT="${port}" \
+  KPO_APP_PORT=${app_port} bash ./run.sh
 }
 
 main() {
@@ -27,6 +28,7 @@ main() {
   local user="postgres"
   local password="docker"
   local port="5432"
+  local app_port="3030"
 
   local p=$(pwd)
   run_database &&

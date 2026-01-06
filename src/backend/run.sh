@@ -9,4 +9,5 @@ sudo docker build -t back . &&
     -e POSTGRES_USER=${KPO_POSTGRES_USER} \
     -e POSTGRES_HOST=${KPO_POSTGRES_HOST} \
     -e POSTGRES_PORT=${KPO_POSTGRES_PORT} \
+    -e APP_PORT=${KPO_APP_PORT} \
     -d -p 1337:8080 back
