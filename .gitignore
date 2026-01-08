@@ -1,4 +1,6 @@
 node_modules/
+integration_tests.log
+unit_tests.log
 coverage/
 .coverage
 .*/
