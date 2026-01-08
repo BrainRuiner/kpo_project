@@ -1,0 +1,13 @@
+#!/bin/bash
+
+./build_all &&
+./server_run
+(sleep 4 &&
+  echo -n "" > unit_tests.log &&
+  echo -n "" > integration_tests.log &&
+  ./scripts/run_unit_tests 2>&1 >> unit_tests.log &&
+  ./scripts/run_integration_tests 2>&1 >> integration_tests.log
+) 2>&1 >>/dev/null &
+
+./client_run
+
