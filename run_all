@@ -1,5 +1,10 @@
 #!/bin/bash
 
+sudo docker network rm -f kpo_net
+sudo docker network create \
+  -d bridge \
+  kpo_net
+
 ./server_run
 (sleep 4 &&
   echo -n "" > unit_tests.log &&
