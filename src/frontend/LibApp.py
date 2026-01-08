@@ -24,12 +24,13 @@ class MainGridContainer(Container):
                 on_enter_callback=self.app.search_books,
                 id="section1"
             )
-            yield InputSection(
-                section_title="Второе поле ввода",
-                input_placeholder="Поле для поиска в личной библиотеке...",
-                on_enter_callback=self.app.search_personal_library,
-                id="section2"
-            )
+            if self.app.current_user != "Гость":
+                yield InputSection(
+                    section_title="Второе поле ввода",
+                    input_placeholder="Поле для поиска в личной библиотеке...",
+                    on_enter_callback=self.app.search_personal_library,
+                    id="section2"
+                )
 
         with VerticalScroll(id="right-pane"):
             books = []
@@ -102,6 +103,7 @@ class LibApp(App):
     def _on_login_close(self) -> None:
         self.showMainContainer()
         if self.current_user != "Гость":
+            self.update_input_container_visibility()
             self._update_library_keys_full()
             self.update_user_info_display()
 
@@ -303,7 +305,10 @@ class LibApp(App):
         if success:
             self.curremr_user = username
             self.password = saved_password
+            self.update_input_container_visibility()
             self._update_library_keys_full()
+        else:
+            self.update_input_container_visibility()
         self.showMainContainer()
         self.update_user_info_display()
 
@@ -365,8 +370,14 @@ class LibApp(App):
         section1.query_one("#text-input", Input).focus()
 
     def action_focus_second(self) -> None:
-        section2 = self.query_one("#section2", InputSection)
-        section2.query_one("#text-input", Input).focus()
+        try:
+            section2 = self.query_one("#section2", InputSection)
+            if section2.display:
+                section2.query_one("#text-input", Input).focus()
+            else:
+                self.action_focus_first()
+        except:
+            self.action_focus_first()
 
     def action_toggle_panes(self) -> None:
         input_container = self.query_one("#input-container", VerticalScroll)
@@ -396,6 +407,7 @@ class LibApp(App):
         self.user_books_count = 0
         self.userid = None
         self.password = None
+        self.update_input_container_visibility()
         self.update_user_info_display()
 
         self.hideMainContainer()
@@ -486,6 +498,29 @@ class LibApp(App):
             self.main_container.styles.display = "block"
             self.action_focus_first()
 
+    def update_input_container_visibility(self) -> None:
+        input_container = self.query_one("#input-container", VerticalScroll)
+        
+        section2_widget = None
+        for widget in input_container.children:
+            if widget.id == "section2":
+                section2_widget = widget
+                break
+        
+        if self.current_user != "Гость":
+            if section2_widget is None:
+                section2 = InputSection(
+                    section_title="Второе поле ввода",
+                    input_placeholder="Поле для поиска в личной библиотеке...",
+                    on_enter_callback=self.search_personal_library,
+                    id="section2"
+                )
+                input_container.mount(section2)
+            else:
+                section2_widget.display = True
+        else:
+            if section2_widget is not None:
+                section2_widget.display = False
 
 if __name__ == "__main__":
     app = LibApp()
