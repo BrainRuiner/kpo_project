@@ -1,13 +1,19 @@
 #!/bin/bash
 
 main() {
+  local app_host=$(sudo docker network inspect kpo_net |
+      grep -oPz "kpo_back(.|\n)*" |
+      grep -oPz "IPv4Address.*\n" |
+      head -1 |
+      grep -oP "(?<=\")[0-9.]*")
+
   sudo docker run --name kpo_front \
-  --network=kpo_net \
-  -e TERM="xterm-256color" \
-  -e APP_HOST="172.22.0.3" \
-  -e APP_PORT="3030" \
-  -it front
-}
+    --network=kpo_net \
+    -e TERM="xterm-256color" \
+    -e APP_HOST="${app_host}" \
+    -e APP_PORT="3030" \
+    -it front
+  }
 
 main
 unset main
