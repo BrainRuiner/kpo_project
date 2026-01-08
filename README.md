@@ -59,3 +59,30 @@
 Команда для запуска всего проекта нужно использовать одну команду: 
 
 ./build_all && ./run_all 
+
+Также предусмотрен отдельный запукс составляющих:
+билд - 
+./build_all
+
+запуск - 
+./server_run && ./client_run
+
+юнит тесты- 
+./scripts/run_unit_tests
+интеграционные тесты - 
+./scripts/run_integration_tests
+
+остановка всех контейнеров - 
+./stopбилд - 
+./build_all
+
+запуск - 
+./server_run && ./client_run
+
+юнит тесты- 
+./scripts/run_unit_tests
+интеграционные тесты - 
+./scripts/run_integration_tests
+
+остановка всех контейнеров - 
+./stop
