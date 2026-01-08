@@ -1,0 +1,15 @@
+
+> libra_backend@0.0.1 test:unit
+> node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage
+
+-----------------------|---------|----------|---------|---------|-------------------
+File                   | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-----------------------|---------|----------|---------|---------|-------------------
+All files              |   97.43 |    85.71 |     100 |   97.43 |                   
+ backend               |     100 |       90 |     100 |     100 |                   
+  assert.js            |     100 |      100 |     100 |     100 |                   
+  login_manager.js     |     100 |    83.33 |     100 |     100 | 16                
+  search_controller.js |     100 |      100 |     100 |     100 |                   
+ backend/db            |      95 |       75 |     100 |      95 |                   
+  db_controller.js     |      95 |       75 |     100 |      95 | 21                
+-----------------------|---------|----------|---------|---------|-------------------
