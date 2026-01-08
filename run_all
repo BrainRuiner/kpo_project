@@ -1,6 +1,5 @@
 #!/bin/bash
 
-./build_all &&
 ./server_run
 (sleep 4 &&
   echo -n "" > unit_tests.log &&
