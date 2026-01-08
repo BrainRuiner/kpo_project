@@ -6,7 +6,7 @@ venv_name="venv"
 setup_dir=$(dirname $0)
 python3 -m venv ${setup_dir}/../${venv_name}
 . ${setup_dir}/../${venv_name}/bin/activate
-pip3 install textual requests
+pip3 install textual requests pytest pytest-cov
 
 echo "Установка завершена"
 
