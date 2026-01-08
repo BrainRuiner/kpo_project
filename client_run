@@ -4,7 +4,7 @@ main() {
   sudo docker run --name kpo_front \
   --network=kpo_net \
   -e TERM="xterm-256color" \
-  -e APP_HOST="localhost" \
+  -e APP_HOST="172.22.0.3" \
   -e APP_PORT="3030" \
   -it front
 }
