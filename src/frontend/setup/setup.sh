@@ -2,6 +2,8 @@
 
 echo "Установка зависимостей для LibApp..."
 
+setup_dir=$(dirname $0)
+. ${setup_dir}/../venv/bin/activate
 pip3 install textual
 
 echo "Установка завершена"
@@ -9,8 +11,8 @@ echo "Установка завершена"
 
 echo "Запуск LibApp.py"
 
-cd ..
-python3 LibApp.py
+main_dir="${setup_dir}/.."
+python3 ${main_dir}/LibApp.py
 
 echo ""
 echo "/////////////////////////////"
@@ -19,3 +21,5 @@ echo "Для запуска используйте следующую коман
 echo "python3 LibApp.py"
 echo ""
 echo "/////////////////////////////"
+
+deactivate
