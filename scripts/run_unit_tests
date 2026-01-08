@@ -1,3 +1,4 @@
 #!/bin/bash
 
-sudo docker exec kpo_back npm run test:unit
+sudo docker exec kpo_back npm run test:unit &&
+sudo docker exec kpo_front bash -c "cd ./test/unit && bash -f run_tests_cov.sh"
